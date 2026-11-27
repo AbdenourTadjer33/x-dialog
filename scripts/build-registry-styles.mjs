@@ -33,6 +33,7 @@ async function readItem(name) {
   return JSON.parse(await readFile(path.join(OUT, `${name}.json`), "utf8"))
 }
 
+const index = await readItem("registry")
 const items = {
   radix: await readItem("x-dialog-radix"),
   base: await readItem("x-dialog-base"),
@@ -51,9 +52,26 @@ for (const [primitive, styles] of Object.entries(STYLES)) {
     "x-dialog-skill": items.skill,
   }
 
+  // `shadcn search` / `list` read the index at the same template: {name} = "registry"
+  const styleIndex = {
+    ...index,
+    items: [
+      {
+        ...index.items.find((item) => item.name === `x-dialog-${primitive}`),
+        name: "x-dialog",
+        title: "x-dialog",
+      },
+      ...index.items,
+    ],
+  }
+
   for (const style of styles) {
     const dir = path.join(OUT, style)
     await mkdir(dir, { recursive: true })
+    await writeFile(
+      path.join(dir, "registry.json"),
+      `${JSON.stringify(styleIndex, null, 2)}\n`
+    )
     for (const [name, item] of Object.entries(files)) {
       await writeFile(
         path.join(dir, `${name}.json`),
