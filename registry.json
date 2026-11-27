@@ -1,0 +1,52 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "x-dialog",
+  "homepage": "https://github.com/AbdenourTadjer33/x-dialog",
+  "items": [
+    {
+      "name": "x-dialog-radix",
+      "type": "registry:ui",
+      "title": "x-dialog (Radix)",
+      "description": "Promise-based, fully typed dialogs with window chrome — drag, maximize, stacking and close guards. `await open(dialog, payload)` returns a typed result. Built on Radix Dialog.",
+      "dependencies": ["@x-dialog/react", "radix-ui", "lucide-react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "registry/radix/x-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Mount <DialogProvider> once near the root, declare dialogs with defineDialog(), then `const result = await open(dialog, payload)` from useDialogs(). Docs: https://github.com/AbdenourTadjer33/x-dialog#readme",
+      "categories": ["dialog", "overlay"]
+    },
+    {
+      "name": "x-dialog-base",
+      "type": "registry:ui",
+      "title": "x-dialog (Base UI)",
+      "description": "Promise-based, fully typed dialogs with window chrome — drag, maximize, stacking and close guards. `await open(dialog, payload)` returns a typed result. Built on Base UI Dialog.",
+      "dependencies": ["@x-dialog/react", "@base-ui/react", "lucide-react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "registry/base/x-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Mount <DialogProvider> once near the root, declare dialogs with defineDialog(), then `const result = await open(dialog, payload)` from useDialogs(). Docs: https://github.com/AbdenourTadjer33/x-dialog#readme",
+      "categories": ["dialog", "overlay"]
+    },
+    {
+      "name": "x-dialog-skill",
+      "type": "registry:file",
+      "title": "x-dialog agent skill",
+      "description": "An Agent Skill (SKILL.md) that teaches coding agents to author and open x-dialog dialogs correctly. Installs to .claude/skills/x-dialog/SKILL.md; also readable by any agent that loads skills.",
+      "files": [
+        {
+          "path": "skills/x-dialog/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/x-dialog/SKILL.md"
+        }
+      ]
+    }
+  ]
+}
