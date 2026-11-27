@@ -1,0 +1,119 @@
+# x-dialog
+
+> Promise-based, fully typed dialogs for React and shadcn/ui. `const result = await open(dialog, payload)` returns the typed value the dialog resolved with, or `null` when it was dismissed. Dialogs stack, can be dragged and maximized, and support async close guards. Rendered with Radix or Base UI.
+
+Two parts: `@x-dialog/react` (npm, the engine) and `components/ui/x-dialog.tsx` (shadcn registry item, the frame, owned by the app). App code imports everything from the frame file.
+
+## Install
+
+- Radix projects: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-radix`
+- Base UI projects: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-base`
+- Agent skill (optional): `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-skill`
+
+Check `components.json` for the project's `base` and `aliases.ui`.
+
+## Core API
+
+```tsx
+import {
+  Dialog,               // slots: Dialog.Body, Dialog.Footer, Dialog.Toolbar, Dialog.TitlebarActions
+  DialogProvider,       // mount once near the root
+  defineDialog,         // declare a dialog
+  useDialogs,           // { open, dismissAll, resolve, dismiss, requestClose }
+  useDialog,            // inside a surface: { id, kind, maximized, isTopmost, requestClose }
+  useDialogCloseGuard,  // inside a surface: return false to stay open
+  useDialogStack,       // readonly stack, for "is any dialog open"
+  type DialogProps,     // { payload, resolve, dismiss }
+  type DialogResult,
+  type DialogPayload,
+} from "@/components/ui/x-dialog"
+```
+
+## Define
+
+```tsx
+function RenameSurface({ payload, resolve, dismiss }: DialogProps<{ name: string }, string>) {
+  const [name, setName] = useState(payload.name)
+  return (
+    <form className="contents" onSubmit={(e) => { e.preventDefault(); resolve(name) }}>
+      <Dialog.Body>
+        <Input data-autofocus value={name} onChange={(e) => setName(e.target.value)} />
+      </Dialog.Body>
+      <Dialog.Footer>
+        <Button type="button" variant="outline" onClick={dismiss}>Cancel</Button>
+        <Button type="submit">Rename</Button>
+      </Dialog.Footer>
+    </form>
+  )
+}
+
+export const renameDialog = defineDialog<{ name: string }, string>({
+  kind: "rename",                                // stable unique id
+  title: (payload) => `Rename ${payload.name}`,  // string or function of payload
+  description: undefined,                        // optional second line
+  icon: undefined,                               // optional ComponentType<{ className?: string }>
+  width: "sm",                                   // sm md lg(default) xl 2xl 3xl 4xl 5xl full
+  height: "auto",                                // auto(default) tall full
+  closeOnEscape: true,
+  closeOnOutsideClick: true,
+  maximizable: true,
+  draggable: true,
+  component: RenameSurface,
+})
+```
+
+## Open
+
+```tsx
+const { open } = useDialogs()
+const name = await open(renameDialog, { name: "roadmap.md" }) // string | null
+if (name === null) return // dismissed
+```
+
+`defineDialog<void, R>` dialogs are opened as `open(dialog)` with no payload.
+
+## Guard
+
+```tsx
+useDialogCloseGuard(async () => {
+  if (!isDirty) return true
+  return (await open(confirmDialog, { title: "Discard changes?", description: "…", confirmLabel: "Discard" })) === true
+})
+```
+
+Runs on Escape, outside click, close button and requestClose(). resolve()/dismiss() skip it. May be async; may open dialogs; a throwing guard keeps the dialog open.
+
+## Rules
+
+1. Always pass both type arguments to defineDialog<Payload, Result>. Use `void` for no payload.
+2. `null` always means dismissed. Never make null a meaningful Result.
+3. A surface returns slots as a fragment. Never wrap Dialog.Body/Footer/Toolbar in a div. For forms use `<form className="contents">`.
+4. Settle only with resolve(value) or dismiss(). Do not manage open state. Do not nest x-dialog surfaces inside shadcn's <Dialog>.
+5. Mark the first input `data-autofocus` when it is not the first tabbable element.
+6. Read reactive values for guards during render.
+7. Open dialogs from event handlers or effects, never during render.
+8. `kind` is unique kebab-case.
+9. `Dialog.Footer` is x-dialog's slot, not shadcn's `DialogFooter`.
+10. One <DialogProvider> per app, above every component that calls useDialogs().
+
+## Provider props
+
+`labels` ({ maximize, restore, close }), `exitDuration` (ms, default 200, use 0 in tests), `baseZIndex` (default 50), `onCloseGuardError(error, { id, kind })`, `frame` (custom frame component).
+
+## Behaviour
+
+- Stack is LIFO. Escape and outside click affect only the topmost dialog.
+- Focus on open: `[data-autofocus]`, else first tabbable in the surface. Focus on close: back to the element focused when the dialog opened.
+- Outside clicks inside a sonner toaster or `[data-dialog-ignore-outside]` are ignored.
+- Provider unmount settles all pending promises with null.
+- DOM: `[data-dialog]`, `[data-kind]`, `[data-maximized]`, `[data-topmost]`, `[data-dialog-part=overlay|viewport|drag-layer|titlebar|titlebar-actions|toolbar|body|footer]`.
+
+## Testing
+
+Wrap in `<DialogProvider exitDuration={0}>`. Query dialogs with `[data-dialog]` or `[data-kind="…"]` (stacked modals hide lower layers from getAllByRole).
+
+## Docs
+
+- README: https://github.com/AbdenourTadjer33/x-dialog#readme
+- API reference: https://github.com/AbdenourTadjer33/x-dialog/blob/main/docs/api.md
+- Recipes: https://github.com/AbdenourTadjer33/x-dialog/blob/main/docs/recipes.md

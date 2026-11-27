@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@/registry/*": ["../../registry/*"],
+      "@x-dialog/react": ["../../packages/react/src/index.ts"],
+      "@/*": ["./src/*"]
+    }
+  }
+}
