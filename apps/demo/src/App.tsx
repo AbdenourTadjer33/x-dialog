@@ -16,7 +16,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useDialogs } from "@/components/x-dialog"
 import { confirmDialog } from "@/dialogs/confirm"
 import { renameDialog } from "@/dialogs/rename"
-import { PRIMITIVES, usePrimitive, type Primitive } from "@/lib/primitive"
+import { usePrimitive, type Primitive } from "@/lib/primitive"
 import { usePromiseLog } from "@/lib/promise-log"
 import { cn } from "@/lib/utils"
 
@@ -243,9 +243,10 @@ function FilesPanel() {
   )
 }
 
+const INSTALL_COMMAND = "npx shadcn@latest add @x-dialog/x-dialog"
+
 function InstallCommand() {
-  const { primitive } = usePrimitive()
-  const command = `npx shadcn@latest add ${REPO}/${PRIMITIVES[primitive].item}`
+  const command = INSTALL_COMMAND
   return (
     <div className="flex items-center gap-2 rounded-lg bg-muted/60 py-1.5 pr-1.5 pl-3 font-mono text-[13px] ring-1 ring-foreground/5">
       <span className="text-muted-foreground select-none">$</span>
@@ -270,7 +271,7 @@ function Hero() {
         <div className="flex max-w-xl flex-col gap-3">
           <InstallCommand />
           <div className="flex items-center gap-3 sm:hidden">
-            <span className="text-sm text-muted-foreground">Primitive</span>
+            <span className="text-sm text-muted-foreground">Demo runs on</span>
             <PrimitiveSwitch />
           </div>
         </div>
@@ -346,7 +347,6 @@ const { open } = useDialogs()
 const name = await open(renameDialog, { name: "roadmap.md" })`
 
 function Install() {
-  const { primitive } = usePrimitive()
   const steps = [
     {
       title: "Add the component",
@@ -354,8 +354,9 @@ function Install() {
         <>
           One command installs{" "}
           <code className="font-mono">components/ui/x-dialog.tsx</code> and the{" "}
-          <code className="font-mono">@x-dialog/react</code> engine from npm.
-          Pick the primitive your shadcn project uses.
+          <code className="font-mono">@x-dialog/react</code> engine from npm. It
+          reads your <code className="font-mono">components.json</code> and
+          picks the Radix or Base UI frame for you.
         </>
       ),
       code: null,
@@ -384,7 +385,6 @@ function Install() {
           <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
             Install
           </h2>
-          <PrimitiveSwitch />
         </div>
         <ol className="flex flex-col gap-10">
           {steps.map((step, index) => (
@@ -403,11 +403,7 @@ function Install() {
                   </p>
                 </div>
               </div>
-              {step.code ? (
-                <Code code={step.code} />
-              ) : (
-                <InstallBlock primitive={primitive} />
-              )}
+              {step.code ? <Code code={step.code} /> : <InstallBlock />}
             </li>
           ))}
         </ol>
@@ -416,12 +412,13 @@ function Install() {
   )
 }
 
-function InstallBlock({ primitive }: { primitive: Primitive }) {
+function InstallBlock() {
   return (
     <Code
-      code={`npx shadcn@latest add ${REPO}/${PRIMITIVES[primitive].item}
+      code={`${INSTALL_COMMAND}
 
-# installs: @x-dialog/react, ${PRIMITIVES[primitive].dependency}, lucide-react`}
+# reads components.json and installs the Radix or Base UI frame,
+# plus @x-dialog/react and lucide-react`}
     />
   )
 }
@@ -507,7 +504,7 @@ function ForAgents() {
             <li>
               <span className="font-medium">An Agent Skill.</span>{" "}
               <code className="font-mono text-xs">
-                npx shadcn@latest add {REPO}/x-dialog-skill
+                npx shadcn@latest add @x-dialog/x-dialog-skill
               </code>{" "}
               teaches Claude Code and other agents the patterns and the rules.
             </li>

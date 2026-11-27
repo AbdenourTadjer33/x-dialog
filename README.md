@@ -105,17 +105,34 @@ x-dialog has two halves, installed together with one command:
 - **`@x-dialog/react`** from npm: the engine (stack, promises, guards, geometry, types). You update it like any dependency.
 - **`components/ui/x-dialog.tsx`** from the shadcn registry: the frame (markup and Tailwind classes). It's your file to restyle.
 
-Pick the primitive your shadcn project uses (`base` in `components.json` tells you):
-
 ```bash
-# Radix
-npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-radix
-
-# Base UI
-npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-base
+npx shadcn@latest add @x-dialog/x-dialog
 ```
 
-Requirements: React 18 or 19, Tailwind CSS v4, and a shadcn project (`components.json`).
+The CLI reads your `components.json` and installs the frame for your primitive (Radix or
+Base UI), along with `@x-dialog/react`, the primitive and `lucide-react`.
+
+<details>
+<summary>If the CLI says the <code>@x-dialog</code> registry isn't configured</summary>
+
+The `@x-dialog` namespace is being added to the shadcn registry directory. Until your CLI
+knows it, register it once per project, then run the command above:
+
+```bash
+npx shadcn@latest registry add "@x-dialog=https://abdenourtadjer33.github.io/x-dialog/r/{style}/{name}.json"
+```
+
+Or pick the frame explicitly, with no setup at all:
+
+```bash
+npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-radix   # Radix
+npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-base    # Base UI
+```
+
+</details>
+
+Requirements: React 18 or 19, Tailwind CSS v4, and a shadcn project (`components.json`) on Radix or
+Base UI. React Aria isn't supported yet.
 
 ## Quick start
 
@@ -246,7 +263,7 @@ x-dialog is designed to be easy for coding agents to get right. A dialog is one 
 surface, everything comes from one import path, and a wrong payload is a compile error that names
 the field.
 
-- **Agent Skill**: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-skill` installs
+- **Agent Skill**: `npx shadcn@latest add @x-dialog/x-dialog-skill` installs
   `.claude/skills/x-dialog/SKILL.md`. It teaches Claude Code (and any agent that reads skills) the
   patterns and the ten rules that keep dialogs typed and accessible.
 - **[`llms.txt`](./apps/demo/public/llms.txt)**: the whole API on one page, written for models.

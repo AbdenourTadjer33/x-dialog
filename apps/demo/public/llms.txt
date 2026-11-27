@@ -6,11 +6,12 @@ Two parts: `@x-dialog/react` (npm, the engine) and `components/ui/x-dialog.tsx` 
 
 ## Install
 
-- Radix projects: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-radix`
-- Base UI projects: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-base`
-- Agent skill (optional): `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-skill`
+- `npx shadcn@latest add @x-dialog/x-dialog` — picks the Radix or Base UI frame from the project's `components.json`.
+- If the CLI reports the `@x-dialog` registry isn't configured, run once: `npx shadcn@latest registry add "@x-dialog=https://abdenourtadjer33.github.io/x-dialog/r/{style}/{name}.json"`, or install explicitly: `npx shadcn@latest add AbdenourTadjer33/x-dialog/x-dialog-radix` (Radix) / `.../x-dialog-base` (Base UI).
+- Agent skill (optional): `npx shadcn@latest add @x-dialog/x-dialog-skill`
+- React Aria projects are not supported yet.
 
-Check `components.json` for the project's `base` and `aliases.ui`.
+Check `components.json` for `aliases.ui`: the frame installs to `<ui>/x-dialog.tsx`.
 
 ## Core API
 

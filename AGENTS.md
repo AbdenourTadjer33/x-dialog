@@ -8,14 +8,15 @@ an app, read [`skills/x-dialog/SKILL.md`](./skills/x-dialog/SKILL.md) or
 
 Promise-based dialogs for React, shipped in two halves:
 
-| Path                          | Ships as                     | Contains                                                          |
-| ----------------------------- | ---------------------------- | ----------------------------------------------------------------- |
-| `packages/react`              | npm `@x-dialog/react`        | The engine: stack, promises, guards, geometry, types. No styles.  |
-| `registry/radix/x-dialog.tsx` | shadcn item `x-dialog-radix` | The frame on Radix. Copied into user projects.                    |
-| `registry/base/x-dialog.tsx`  | shadcn item `x-dialog-base`  | The same frame on Base UI.                                        |
-| `skills/x-dialog/SKILL.md`    | shadcn item `x-dialog-skill` | Agent skill for consumers.                                        |
-| `apps/demo`                   | GitHub Pages                 | Demo site. Imports the registry files and the engine from source. |
-| `docs/`                       | —                            | API reference and recipes.                                        |
+| Path                                | Ships as                     | Contains                                                            |
+| ----------------------------------- | ---------------------------- | ------------------------------------------------------------------- |
+| `packages/react`                    | npm `@x-dialog/react`        | The engine: stack, promises, guards, geometry, types. No styles.    |
+| `registry/radix/x-dialog.tsx`       | shadcn item `x-dialog-radix` | The frame on Radix. Copied into user projects.                      |
+| `registry/base/x-dialog.tsx`        | shadcn item `x-dialog-base`  | The same frame on Base UI.                                          |
+| `skills/x-dialog/SKILL.md`          | shadcn item `x-dialog-skill` | Agent skill for consumers.                                          |
+| `apps/demo`                         | GitHub Pages                 | Demo site. Imports the registry files and the engine from source.   |
+| `docs/`                             | —                            | API reference and recipes.                                          |
+| `scripts/build-registry-styles.mjs` | `r/<style>/*.json` on Pages  | Fans the built items out per shadcn style for `@x-dialog/x-dialog`. |
 
 ## Commands
 
@@ -27,6 +28,7 @@ pnpm typecheck
 pnpm lint
 pnpm format              # prettier, incl. tailwind class sorting
 pnpm registry:validate   # shadcn registry schema check
+pnpm registry:build      # build items + per-style copies into apps/demo/public/r
 pnpm check               # everything CI runs
 ```
 
@@ -44,6 +46,9 @@ pnpm check               # everything CI runs
 - **Registry files use only stable shadcn imports**: `@/lib/utils` (`cn`), `lucide-react`,
   the primitive, and `@x-dialog/react`. No `@/components/ui/*` — user projects may have
   older versions of those components.
+- **`@x-dialog/x-dialog` resolves per shadcn style.** `scripts/build-registry-styles.mjs`
+  lists the presets (`nova`, `vega`, …); when shadcn adds one, add it there or projects
+  using it get a 404.
 - **Tailwind v4 classes, no shadcn-only variants.** Use `data-[state=open]:` (Radix) and
   `data-[open]:` (Base UI), not `data-open:`, which needs `shadcn/tailwind.css`.
 - **Public API changes need**: a type test in `packages/react/src/__tests__/types.test-d.ts`

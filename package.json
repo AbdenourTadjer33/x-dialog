@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "registry:build": "shadcn build registry.json --output apps/demo/public/r",
+    "registry:build": "shadcn build registry.json --output apps/demo/public/r && node scripts/build-registry-styles.mjs",
     "registry:validate": "shadcn registry validate ./registry.json",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm --filter @x-dialog/react check:package",
     "changeset": "changeset",

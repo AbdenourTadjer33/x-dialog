@@ -5,18 +5,6 @@ import { DialogProvider as RadixDialogProvider } from "@/registry/radix/x-dialog
 
 export type Primitive = "radix" | "base"
 
-export const PRIMITIVES: Record<
-  Primitive,
-  { label: string; item: string; dependency: string }
-> = {
-  radix: { label: "Radix", item: "x-dialog-radix", dependency: "radix-ui" },
-  base: {
-    label: "Base UI",
-    item: "x-dialog-base",
-    dependency: "@base-ui/react",
-  },
-}
-
 const STORAGE_KEY = "x-dialog-demo:primitive"
 
 function initialPrimitive(): Primitive {
