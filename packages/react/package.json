@@ -1,0 +1,83 @@
+{
+  "name": "@x-dialog/react",
+  "version": "0.1.0",
+  "description": "Promise-based, fully typed dialogs for React. `await open(dialog, payload)` and get a typed result back. Headless engine for the x-dialog shadcn registry.",
+  "keywords": [
+    "react",
+    "dialog",
+    "modal",
+    "promise",
+    "async",
+    "await",
+    "declarative",
+    "typescript",
+    "shadcn",
+    "radix",
+    "base-ui",
+    "headless"
+  ],
+  "license": "MIT",
+  "author": "Abdenour Tadjer (https://github.com/AbdenourTadjer33)",
+  "homepage": "https://github.com/AbdenourTadjer33/x-dialog#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbdenourTadjer33/x-dialog.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/AbdenourTadjer33/x-dialog/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run --typecheck",
+    "test:watch": "vitest --typecheck",
+    "typecheck": "tsc --noEmit",
+    "check:package": "publint && attw --pack . --profile node16",
+    "prepack": "cp ../../README.md ../../LICENSE ."
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "jsdom": "^31.0.1",
+    "publint": "^0.3.25",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsdown": "^0.23.7",
+    "typescript": "~6.0.2",
+    "vitest": "^5.1.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
