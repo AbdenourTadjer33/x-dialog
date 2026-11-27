@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="960" height="430" role="img" aria-labelledby="t d">
+  <title id="t">How x-dialog works</title>
+  <desc id="d">Your code awaits open(dialog, payload). The @x-dialog/react engine pushes the dialog onto a stack and returns a pending promise. Your components/ui/x-dialog.tsx frame renders it with Radix or Base UI. The promise settles with the resolved value, or null when dismissed.</desc>
+  <style>
+    .bg { fill: #ffffff; }
+    .card { fill: #fafafa; stroke: #e4e4e7; }
+    .ink { fill: #18181b; }
+    .muted { fill: #71717a; }
+    .line { stroke: #a1a1aa; }
+    .code { fill: #f4f4f5; }
+    .pending { fill: #d9a23b; }
+    .resolved { fill: #2f9e6e; }
+    .dismissed { fill: #7c8596; }
+    .s-pending { stroke: #d9a23b; }
+    .s-resolved { stroke: #2f9e6e; }
+    .s-dismissed { stroke: #7c8596; }
+    .t-resolved { fill: #2f9e6e; }
+    .t-dismissed { fill: #7c8596; }
+    .t-pending { fill: #b07d1f; }
+    .sans { font-family: ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0d1117; }
+      .card { fill: #161b22; stroke: #30363d; }
+      .ink { fill: #f0f6fc; }
+      .muted { fill: #8b949e; }
+      .line { stroke: #6e7681; }
+      .code { fill: #1f2630; }
+      .t-pending { fill: #e3b341; }
+      .t-resolved { fill: #3fb97e; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" class="muted"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="960" height="430" rx="16"/>
+
+  <!-- 1. your code -->
+  <g class="sans">
+    <rect class="card" x="24" y="24" width="276" height="250" rx="12" stroke-width="1.5"/>
+    <text class="ink" x="44" y="56" font-size="15" font-weight="600">Your code</text>
+    <text class="muted" x="44" y="76" font-size="12.5">Anywhere under the provider</text>
+    <rect class="code" x="40" y="94" width="244" height="164" rx="8"/>
+    <g class="mono" font-size="12.5">
+      <text class="muted" x="54" y="120">const { open } = useDialogs()</text>
+      <text class="ink" x="54" y="152">const name = await open(</text>
+      <text class="ink" x="70" y="172">renameDialog,</text>
+      <text class="ink" x="70" y="192">{ name: "roadmap.md" }</text>
+      <text class="ink" x="54" y="212">)</text>
+      <text class="muted" x="54" y="242">// string | null</text>
+    </g>
+  </g>
+
+  <!-- 2. engine -->
+  <g class="sans">
+    <rect class="card" x="342" y="24" width="276" height="250" rx="12" stroke-width="1.5"/>
+    <text class="ink mono" x="362" y="56" font-size="14" font-weight="600">@x-dialog/react</text>
+    <text class="muted" x="362" y="76" font-size="12.5">npm · the engine · no styles</text>
+    <g font-size="13" class="ink">
+      <text x="362" y="112">Pushes the dialog on a LIFO stack</text>
+      <text x="362" y="136">Holds the pending promise</text>
+      <text x="362" y="160">Routes every close through</text>
+      <text x="362" y="178">the close guard</text>
+      <text x="362" y="202">Drag and maximize geometry</text>
+      <text x="362" y="226">Payload and result types</text>
+    </g>
+    <text class="muted mono" x="362" y="258" font-size="11.5">useDialogFrame(props)</text>
+  </g>
+
+  <!-- 3. frame -->
+  <g class="sans">
+    <rect class="card" x="660" y="24" width="276" height="250" rx="12" stroke-width="1.5"/>
+    <text class="ink mono" x="680" y="56" font-size="13" font-weight="600">components/ui/x-dialog.tsx</text>
+    <text class="muted" x="680" y="76" font-size="12.5">shadcn registry · your file</text>
+    <!-- mini window -->
+    <rect x="680" y="94" width="236" height="122" rx="8" class="bg line" stroke-width="1.5"/>
+    <rect x="680" y="94" width="236" height="26" rx="8" class="code"/>
+    <rect x="680" y="112" width="236" height="8" class="code"/>
+    <text class="ink" x="692" y="111" font-size="11.5" font-weight="600">Rename roadmap.md</text>
+    <text class="muted" x="878" y="111" font-size="12">⤢</text>
+    <text class="muted" x="898" y="111" font-size="12">✕</text>
+    <rect x="694" y="134" width="208" height="24" rx="5" class="code"/>
+    <text class="ink mono" x="704" y="150" font-size="11.5">roadmap-2027.md</text>
+    <rect x="796" y="178" width="48" height="24" rx="5" class="code"/>
+    <text class="ink" x="805" y="194" font-size="11">Cancel</text>
+    <rect x="850" y="178" width="54" height="24" rx="5" class="ink"/>
+    <text class="bg" x="856" y="194" font-size="11">Rename</text>
+    <text class="muted" x="680" y="244" font-size="12.5">Radix or Base UI · Tailwind</text>
+    <text class="muted" x="680" y="262" font-size="12.5">Restyle it like any shadcn file</text>
+  </g>
+
+  <!-- arrows between cards -->
+  <path d="M300 150H338" class="line" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M618 150H656" class="line" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- 4. promise timeline -->
+  <g class="sans">
+    <text class="ink" x="24" y="322" font-size="15" font-weight="600">The promise</text>
+    <text class="muted" x="24" y="342" font-size="12.5">Settles once. Escape, outside click, the close button and dismiss() all mean null.</text>
+
+    <path d="M60 384H360" class="s-pending" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+    <circle cx="60" cy="384" r="7" class="pending"/>
+    <text class="t-pending mono" x="80" y="372" font-size="12.5">pending…</text>
+
+    <path d="M360 384C420 384 430 364 480 364H600" fill="none" class="s-resolved" stroke-width="3" stroke-linecap="round"/>
+    <path d="M360 384C420 384 430 404 480 404H600" fill="none" class="s-dismissed" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="610" cy="364" r="7" class="resolved"/>
+    <circle cx="610" cy="404" r="7" class="dismissed"/>
+    <text xml:space="preserve" class="t-resolved mono" x="630" y="368" font-size="13">resolve(value)  →  "roadmap-2027.md"</text>
+    <text xml:space="preserve" class="t-dismissed mono" x="630" y="408" font-size="13">dismissed       →  null</text>
+  </g>
+</svg>
