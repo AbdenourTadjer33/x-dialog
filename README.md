@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/hero-dark.png">
-  <img alt="A note editor dialog with a 'Discard changes?' confirmation stacked on top of it" src=".github/assets/hero-light.png" width="860">
+  <img alt="A refund dialog for order #1041 with a manager-approval PIN dialog stacked on top of it" src=".github/assets/hero-light.png" width="860">
 </picture>
 
 # x-dialog
