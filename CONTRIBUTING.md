@@ -5,7 +5,7 @@ are all welcome.
 
 ## Setup
 
-Requires Node 20+ and pnpm (the version is pinned in `package.json`; `corepack enable`
+Requires Node 22.13+ and pnpm (the version is pinned in `package.json`; `corepack enable`
 picks it up).
 
 ```bash

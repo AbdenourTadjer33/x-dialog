@@ -14,8 +14,9 @@ jobs:
     name: Check (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false # one Node version failing must not hide the other's result
       matrix:
-        node: [20, 22]
+        node: [22, 24] # pnpm 11 needs Node >= 22.13
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
