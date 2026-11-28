@@ -1,6 +1,6 @@
 {
   "name": "@x-dialog/react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Promise-based, fully typed dialogs for React. `await open(dialog, payload)` and get a typed result back. Headless engine for the x-dialog shadcn registry.",
   "keywords": [
     "react",
