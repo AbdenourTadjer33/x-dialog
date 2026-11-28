@@ -2,7 +2,12 @@ import { describe, expectTypeOf, it } from "vitest"
 
 import type { DialogActions } from "../context"
 import { defineDialog } from "../define"
-import type { DialogPayload, DialogProps, DialogResult } from "../types"
+import type {
+  DialogDefaults,
+  DialogPayload,
+  DialogProps,
+  DialogResult,
+} from "../types"
 
 declare const open: DialogActions["open"]
 
@@ -95,5 +100,29 @@ describe("surface props", () => {
   it("allows resolve() with no argument for void results", () => {
     const props = {} as DialogProps<void, void>
     props.resolve()
+  })
+})
+
+describe("provider defaults", () => {
+  it("accepts the shared options", () => {
+    const defaults: DialogDefaults = {
+      width: "md",
+      height: "tall",
+      closeOnEscape: true,
+      closeOnOutsideClick: false,
+      maximizable: false,
+      draggable: false,
+    }
+    void defaults
+  })
+
+  it("rejects options that only make sense per dialog", () => {
+    // @ts-expect-error — a title belongs to one dialog
+    const withTitle: DialogDefaults = { title: "Hi" }
+    // @ts-expect-error — so does the kind
+    const withKind: DialogDefaults = { kind: "x" }
+    // @ts-expect-error — and the width must be a known token
+    const badWidth: DialogDefaults = { width: "huge" }
+    void [withTitle, withKind, badWidth]
   })
 })

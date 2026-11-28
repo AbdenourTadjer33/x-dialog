@@ -121,6 +121,11 @@ await duplicate(project, result)
 
 ## Definition options
 
+The defaults below are the built-ins. Check `<DialogProvider defaults={…}>` first: an app
+may set `width`, `height`, `closeOnEscape`, `closeOnOutsideClick`, `maximizable` or
+`draggable` once there. Only set an option in a definition when this dialog differs from
+the app — a definition that sets an option always wins.
+
 | Option                | Default  | Notes                                             |
 | --------------------- | -------- | ------------------------------------------------- |
 | `kind`                | required | Stable id.                                        |

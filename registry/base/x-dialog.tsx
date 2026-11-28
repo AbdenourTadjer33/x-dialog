@@ -310,6 +310,7 @@ export {
 } from "@x-dialog/react"
 export type {
   DialogCloseGuard,
+  DialogDefaults,
   DialogDefinition,
   DialogPayload,
   DialogProps,

@@ -1,7 +1,8 @@
 import * as React from "react"
 
-import { DialogInstanceContext } from "../context"
+import { DialogDefaultsContext, DialogInstanceContext } from "../context"
 import type { DialogInstanceContextValue } from "../context"
+import { resolveDialogOptions } from "../options"
 import type { DialogFrameProps } from "../provider"
 import type { DialogHeight, DialogWidth } from "../types"
 import {
@@ -79,12 +80,15 @@ export function useDialogFrame({
   const { definition, id, maximized, payload, phase } = instance
   const actions = useDialogs()
 
-  const width = definition.width ?? "lg"
-  const height = definition.height ?? "auto"
-  const maximizable = definition.maximizable ?? true
-  const draggable = definition.draggable ?? true
-  const closeOnEscape = definition.closeOnEscape ?? true
-  const closeOnOutsideClick = definition.closeOnOutsideClick ?? true
+  const defaults = React.useContext(DialogDefaultsContext)
+  const {
+    width,
+    height,
+    maximizable,
+    draggable,
+    closeOnEscape,
+    closeOnOutsideClick,
+  } = resolveDialogOptions(definition, defaults)
 
   const title = resolveDialogText(definition.title, payload) ?? ""
   const description = resolveDialogText(definition.description, payload)

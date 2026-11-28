@@ -239,21 +239,23 @@ different primitive or a sheet on mobile, write your own frame. See [Custom fram
 
 ## API at a glance
 
-| Export                                                      | What it does                                                                          |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `defineDialog<Payload, Result>(definition)`                 | Declares a dialog. Returns the handle you pass to `open`.                             |
-| `<DialogProvider>`                                          | Mount once. Props: `labels`, `exitDuration`, `baseZIndex`, `onCloseGuardError`.       |
-| `useDialogs()`                                              | `{ open, dismissAll, resolve, dismiss, requestClose, … }`. Never changes identity.    |
-| `useDialog()`                                               | Inside a surface: `{ id, kind, maximized, isTopmost, requestClose, toggleMaximize }`. |
-| `useDialogCloseGuard(guard)`                                | Inside a surface: return `false` to stay open.                                        |
-| `useDialogStack()`                                          | The open stack, for things like "is any dialog open".                                 |
-| `Dialog.Body` / `.Footer` / `.Toolbar` / `.TitlebarActions` | Layout slots for a surface.                                                           |
-| `DialogProps<Payload, Result>`                              | Props of a surface: `{ payload, resolve, dismiss }`.                                  |
-| `DialogResult<typeof d>` / `DialogPayload<typeof d>`        | Extract a definition's types.                                                         |
+| Export                                                      | What it does                                                                                |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `defineDialog<Payload, Result>(definition)`                 | Declares a dialog. Returns the handle you pass to `open`.                                   |
+| `<DialogProvider>`                                          | Mount once. Props: `defaults`, `labels`, `exitDuration`, `baseZIndex`, `onCloseGuardError`. |
+| `useDialogs()`                                              | `{ open, dismissAll, resolve, dismiss, requestClose, … }`. Never changes identity.          |
+| `useDialog()`                                               | Inside a surface: `{ id, kind, maximized, isTopmost, requestClose, toggleMaximize }`.       |
+| `useDialogCloseGuard(guard)`                                | Inside a surface: return `false` to stay open.                                              |
+| `useDialogStack()`                                          | The open stack, for things like "is any dialog open".                                       |
+| `Dialog.Body` / `.Footer` / `.Toolbar` / `.TitlebarActions` | Layout slots for a surface.                                                                 |
+| `DialogProps<Payload, Result>`                              | Props of a surface: `{ payload, resolve, dismiss }`.                                        |
+| `DialogResult<typeof d>` / `DialogPayload<typeof d>`        | Extract a definition's types.                                                               |
 
 **Definition options:** `kind`, `title`, `description`, `icon`, `width` (`sm`…`5xl`, `full`),
 `height` (`auto`, `tall`, `full`), `closeOnEscape`, `closeOnOutsideClick`, `maximizable`,
-`draggable`, `component`.
+`draggable`, `component`. Set app-wide values for the layout and close options once with
+`<DialogProvider defaults={{ maximizable: false, draggable: false }}>`; a definition that sets
+an option still wins.
 
 → Full reference: [docs/api.md](./docs/api.md) · Patterns: [docs/recipes.md](./docs/recipes.md)
 

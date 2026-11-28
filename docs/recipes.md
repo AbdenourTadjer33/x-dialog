@@ -10,6 +10,7 @@ Copy-paste patterns. Each assumes `import { … } from "@/components/ui/x-dialog
 - [Titlebar buttons](#titlebar-buttons)
 - [Async work inside a dialog](#async-work-inside-a-dialog)
 - [Close everything on navigation](#close-everything-on-navigation)
+- [App-wide defaults](#app-wide-defaults)
 - [Translate the titlebar](#translate-the-titlebar)
 - [Testing](#testing)
 
@@ -279,6 +280,30 @@ const { dismissAll } = useDialogs()
 const location = useLocation()
 
 useEffect(() => dismissAll(), [location.pathname, dismissAll])
+```
+
+---
+
+## App-wide defaults
+
+A data-entry app with no dragging, no maximize, and no closing on a stray click:
+
+```tsx
+<DialogProvider
+  defaults={{ draggable: false, maximizable: false, closeOnOutsideClick: false }}
+>
+```
+
+The one dialog that should still maximize says so itself:
+
+```tsx
+defineDialog<void, Report>({
+  kind: "report-viewer",
+  title: "Report",
+  width: "5xl",
+  maximizable: true, // wins over the provider's default
+  component: ReportSurface,
+})
 ```
 
 ---

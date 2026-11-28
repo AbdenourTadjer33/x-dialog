@@ -28,7 +28,8 @@ function defineDialog<Payload = void, Result = void>(
 ```
 
 Declares a dialog. The returned object is the handle you pass to `open()`; there is
-nothing to register. Always pass both type arguments — they drive inference at every call
+nothing to register. Defaults below are the built-ins; an app can change them with
+[provider defaults](#provider-defaults). Always pass both type arguments — they drive inference at every call
 site.
 
 | Option                | Type                                                      | Default  | Notes                                                                                   |
@@ -58,6 +59,7 @@ instead (`{ action: "skip" }`).
 
 ```tsx
 <DialogProvider
+  defaults={{ maximizable: false, draggable: false }}
   labels={{ maximize: "Agrandir", restore: "Restaurer", close: "Fermer" }}
   exitDuration={200}
   baseZIndex={50}
@@ -72,6 +74,7 @@ client, theme, i18n) — dialogs render inside your React tree and share them.
 
 | Prop                | Default          | Notes                                                                                                              |
 | ------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `defaults`          | built-ins        | App-wide values for definition options — see [Provider defaults](#provider-defaults).                              |
 | `labels`            | English          | Titlebar button labels.                                                                                            |
 | `exitDuration`      | `200`            | ms a closed dialog stays mounted for its exit animation. The promise settles immediately anyway. Use `0` in tests. |
 | `baseZIndex`        | `50`             | z-index of the bottom dialog; each stacked dialog adds 10.                                                         |
@@ -79,6 +82,29 @@ client, theme, i18n) — dialogs render inside your React tree and share them.
 | `frame`             | the file's frame | Replace the frame entirely — see [Custom frames](#custom-frames).                                                  |
 
 Unmounting the provider settles every open dialog with `null`.
+
+### Provider defaults
+
+Some apps never want dragging or maximizing; others never close on outside click.
+Set those once on the provider instead of in every definition:
+
+```tsx
+<DialogProvider defaults={{ maximizable: false, draggable: false }}>
+```
+
+`defaults` accepts the options that make sense app-wide — `width`, `height`,
+`closeOnEscape`, `closeOnOutsideClick`, `maximizable`, `draggable` — typed as
+`DialogDefaults`. Per-dialog fields (`kind`, `title`, `component`, …) are rejected.
+
+Each option is resolved in this order, first match wins:
+
+1. **The definition**, when it sets the option — even to the built-in value. One
+   dialog can opt back in to what the app turned off: `maximizable: true`.
+2. **The provider's `defaults`.**
+3. **The built-ins**: `width: "lg"`, `height: "auto"`, everything else `true`.
+
+`undefined` counts as "not set" at every level. Frame authors get the resolved values
+from `useDialogFrame`, or can call `resolveDialogOptions(definition, defaults)` directly.
 
 ---
 
@@ -195,7 +221,7 @@ type Name = DialogResult<typeof renameDialog> // string
 type Args = DialogPayload<typeof renameDialog> // { name: string }
 ```
 
-Also exported: `DialogDefinition`, `DialogProps`, `DialogCloseGuard`. From
+Also exported: `DialogDefinition`, `DialogDefaults`, `DialogProps`, `DialogCloseGuard`. From
 `@x-dialog/react`: `DialogInstance`, `DialogWidth`, `DialogHeight`, `DialogActions`,
 `DialogOpenArgs`.
 

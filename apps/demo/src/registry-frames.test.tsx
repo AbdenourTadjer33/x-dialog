@@ -172,4 +172,29 @@ describe.each([
     })
     expect(await screen.findByRole("button", { name: "Fermer" })).toBeTruthy()
   })
+
+  it("applies provider defaults to the titlebar", async () => {
+    let actions!: ReturnType<typeof useDialogs>
+    function Grab() {
+      actions = useDialogs()
+      return null
+    }
+    render(
+      <DialogProvider
+        exitDuration={0}
+        defaults={{ maximizable: false, draggable: false }}
+      >
+        <Grab />
+      </DialogProvider>
+    )
+    act(() => {
+      void actions.open(askDialog, { question: "Locked" })
+    })
+    const dialog = await screen.findByRole("dialog", { name: "Locked" })
+
+    expect(screen.queryByRole("button", { name: "Maximize" })).toBeNull()
+    // not draggable: the titlebar is no longer a keyboard drag handle
+    const titlebar = dialog.querySelector('[data-dialog-part="titlebar"]')
+    expect(titlebar?.hasAttribute("tabindex")).toBe(false)
+  })
 })

@@ -547,6 +547,99 @@ describe("frame features", () => {
   })
 })
 
+describe("provider defaults", () => {
+  const plainDialog = defineDialog({
+    kind: "plain",
+    title: "Plain",
+    component: () => <p>plain body</p>,
+  })
+
+  const optedInDialog = defineDialog({
+    kind: "opted-in",
+    title: "Opted in",
+    maximizable: true,
+    draggable: true,
+    width: "3xl",
+    component: () => <p>opted-in body</p>,
+  })
+
+  it("uses the built-ins when neither the provider nor the definition sets an option", async () => {
+    const h = harness()
+    act(() => {
+      void h.actions.open(plainDialog)
+    })
+    await screen.findByText("plain body")
+
+    const frame = frames()[0]!
+    expect(frame.dataset.width).toBe("lg")
+    expect(frame.dataset.height).toBe("auto")
+    expect(frame.dataset.draggable).toBe("true")
+    expect(screen.getByRole("button", { name: "Maximize" })).toBeTruthy()
+  })
+
+  it("applies the provider's defaults to definitions that don't set the option", async () => {
+    const h = harness({
+      defaults: {
+        maximizable: false,
+        draggable: false,
+        width: "sm",
+        height: "tall",
+      },
+    })
+    act(() => {
+      void h.actions.open(plainDialog)
+    })
+    await screen.findByText("plain body")
+
+    const frame = frames()[0]!
+    expect(frame.dataset.width).toBe("sm")
+    expect(frame.dataset.height).toBe("tall")
+    expect(frame.dataset.draggable).toBeUndefined()
+    expect(screen.queryByRole("button", { name: "Maximize" })).toBeNull()
+  })
+
+  it("lets a definition opt back in to what the provider turned off", async () => {
+    const h = harness({
+      defaults: { maximizable: false, draggable: false, width: "sm" },
+    })
+    act(() => {
+      void h.actions.open(optedInDialog)
+    })
+    await screen.findByText("opted-in body")
+
+    const frame = frames()[0]!
+    expect(frame.dataset.width).toBe("3xl")
+    expect(frame.dataset.draggable).toBe("true")
+    expect(screen.getByRole("button", { name: "Maximize" })).toBeTruthy()
+  })
+
+  it("applies close defaults to Escape and outside presses", async () => {
+    const h = harness({
+      defaults: { closeOnEscape: false, closeOnOutsideClick: false },
+    })
+    const result = openAndTrack(() => h.actions.open(plainDialog))
+    await screen.findByText("plain body")
+
+    fireEvent.keyDown(frames()[0]!, { key: "Escape" })
+    fireEvent.pointerDown(screen.getByTestId("outside"))
+    await act(async () => {})
+    expect(result.settled).toBe(false)
+
+    // the close button is not governed by these options
+    fireEvent.click(screen.getByRole("button", { name: "Close" }))
+    await waitFor(() => expect(result.settled).toBe(true))
+  })
+
+  it("keeps the actions object stable when defaults are passed inline", async () => {
+    const h = harness({ defaults: { maximizable: false } })
+    act(() => {
+      void h.actions.open(plainDialog)
+    })
+    await screen.findByText("plain body")
+    expect(new Set(h.identities).size).toBe(1)
+  })
+})
+
 describe("lifecycle", () => {
   it("keeps a closed dialog mounted for exitDuration, then removes it", async () => {
     vi.useFakeTimers()

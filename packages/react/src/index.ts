@@ -9,6 +9,7 @@ export { DialogTitlebarActions } from "./titlebar-actions"
 export { useDialogFrame } from "./hooks/use-dialog-frame"
 export { useDragTransform } from "./hooks/use-drag-transform"
 export { findInitialFocus, resolveDialogText } from "./utils"
+export { BUILT_IN_DIALOG_OPTIONS, resolveDialogOptions } from "./options"
 
 export type { DialogActions, DialogInstanceContextValue } from "./context"
 export type {
@@ -25,14 +26,17 @@ export type {
 export type {
   AnyDialogDefinition,
   DialogCloseGuard,
+  DialogDefaults,
   DialogDefinition,
   DialogHeight,
   DialogInstance,
   DialogOpenArgs,
+  DialogOptionName,
   DialogPayload,
   DialogPhase,
   DialogProps,
   DialogResult,
   DialogText,
   DialogWidth,
+  ResolvedDialogOptions,
 } from "./types"

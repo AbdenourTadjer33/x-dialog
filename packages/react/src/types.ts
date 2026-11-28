@@ -41,21 +41,41 @@ export type DialogDefinition<Payload = void, Result = void> = {
   description?: DialogText<Payload>
   /** Titlebar icon, e.g. a lucide-react component. */
   icon?: React.ComponentType<{ className?: string }>
-  /** Default `"lg"`. */
+  /** Default `"lg"`, or the provider's `defaults.width`. */
   width?: DialogWidth
-  /** Default `"auto"`. */
+  /** Default `"auto"`, or the provider's `defaults.height`. */
   height?: DialogHeight
-  /** Default `true`. */
+  /** Default `true`, or the provider's `defaults.closeOnEscape`. */
   closeOnEscape?: boolean
-  /** Default `true`. Large working surfaces usually want `false`. */
+  /** Default `true`, or the provider's default. Large working surfaces usually want `false`. */
   closeOnOutsideClick?: boolean
-  /** Default `true`. Also controls double-click on the titlebar. */
+  /** Default `true`, or the provider's default. Also controls double-click on the titlebar. */
   maximizable?: boolean
-  /** Default `true`. Drag the dialog by its titlebar. */
+  /** Default `true`, or the provider's default. Drag the dialog by its titlebar. */
   draggable?: boolean
   /** The surface: a plain component that receives {@link DialogProps}. */
   component: React.ComponentType<DialogProps<Payload, Result>>
 }
+
+/** The definition options a `DialogProvider` can set app-wide. */
+export type DialogOptionName =
+  | "width"
+  | "height"
+  | "closeOnEscape"
+  | "closeOnOutsideClick"
+  | "maximizable"
+  | "draggable"
+
+/**
+ * App-wide defaults for `<DialogProvider defaults={…}>`.
+ *
+ * A definition that sets an option always wins — even when it sets the
+ * built-in value — so one dialog can opt back in to what the app turned off.
+ */
+export type DialogDefaults = Partial<Pick<DialogDefinition, DialogOptionName>>
+
+/** Every option resolved: definition, then provider defaults, then built-ins. */
+export type ResolvedDialogOptions = Required<DialogDefaults>
 
 /**
  * A definition with its type arguments erased.

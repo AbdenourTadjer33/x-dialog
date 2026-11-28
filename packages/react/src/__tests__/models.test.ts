@@ -7,6 +7,7 @@ import {
   topmostOpenIndex,
 } from "../models/dialog-stack"
 import { PendingDialogs } from "../models/pending-dialogs"
+import { BUILT_IN_DIALOG_OPTIONS, resolveDialogOptions } from "../options"
 import type { DialogDefinition, DialogInstance } from "../types"
 
 const definition: DialogDefinition = {
@@ -157,5 +158,35 @@ describe("PendingDialogs", () => {
     expect(first).toHaveBeenCalledExactlyOnceWith(null)
     expect(second).toHaveBeenCalledExactlyOnceWith(null)
     expect(pending.ids()).toEqual([])
+  })
+})
+
+describe("resolveDialogOptions", () => {
+  it("falls back to the built-ins", () => {
+    expect(resolveDialogOptions({})).toEqual(BUILT_IN_DIALOG_OPTIONS)
+  })
+
+  it("prefers the provider's defaults over the built-ins", () => {
+    expect(
+      resolveDialogOptions({}, { maximizable: false, width: "sm" })
+    ).toMatchObject({ maximizable: false, width: "sm", draggable: true })
+  })
+
+  it("prefers the definition over the provider's defaults, even for built-in values", () => {
+    expect(
+      resolveDialogOptions(
+        { maximizable: true, closeOnEscape: true },
+        { maximizable: false, closeOnEscape: false }
+      )
+    ).toMatchObject({ maximizable: true, closeOnEscape: true })
+  })
+
+  it("treats undefined as unset at every level", () => {
+    expect(
+      resolveDialogOptions({ draggable: undefined }, { draggable: false })
+    ).toMatchObject({ draggable: false })
+    expect(resolveDialogOptions({}, { draggable: undefined }).draggable).toBe(
+      true
+    )
   })
 })

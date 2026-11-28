@@ -2,6 +2,7 @@ import * as React from "react"
 
 import type {
   DialogCloseGuard,
+  DialogDefaults,
   DialogDefinition,
   DialogInstance,
   DialogOpenArgs,
@@ -65,3 +66,8 @@ DialogStackContext.displayName = "DialogStackContext"
 export const DialogInstanceContext: React.Context<DialogInstanceContextValue | null> =
   React.createContext<DialogInstanceContextValue | null>(null)
 DialogInstanceContext.displayName = "DialogInstanceContext"
+
+/** The provider's `defaults`. Empty when none were given. */
+export const DialogDefaultsContext: React.Context<DialogDefaults> =
+  React.createContext<DialogDefaults>({})
+DialogDefaultsContext.displayName = "DialogDefaultsContext"

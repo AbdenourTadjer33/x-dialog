@@ -23,6 +23,8 @@ export function TestFrame(props: DialogFrameProps): React.JSX.Element {
       data-topmost={frame.isTopmost || undefined}
       data-maximized={frame.maximized || undefined}
       data-width={frame.width}
+      data-height={frame.height}
+      data-draggable={frame.draggable || undefined}
       style={{ zIndex: frame.zIndex }}
       onKeyDown={(event) => {
         if (event.key === "Escape") frame.handleEscapeKey()

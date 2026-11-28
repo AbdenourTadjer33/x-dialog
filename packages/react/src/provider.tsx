@@ -1,6 +1,10 @@
 import * as React from "react"
 
-import { DialogActionsContext, DialogStackContext } from "./context"
+import {
+  DialogActionsContext,
+  DialogDefaultsContext,
+  DialogStackContext,
+} from "./context"
 import type { DialogActions } from "./context"
 import {
   createDialogInstance,
@@ -11,6 +15,7 @@ import {
 import { PendingDialogs } from "./models/pending-dialogs"
 import type {
   DialogCloseGuard,
+  DialogDefaults,
   DialogDefinition,
   DialogInstance,
 } from "./types"
@@ -39,6 +44,14 @@ export type DialogProviderProps = {
    * `useDialogFrame`.
    */
   frame: React.ComponentType<DialogFrameProps>
+  /**
+   * App-wide defaults for definition options — e.g. turn off drag and
+   * maximize everywhere. A definition that sets an option still wins.
+   *
+   * @example
+   * <DialogProvider defaults={{ maximizable: false, draggable: false }}>
+   */
+  defaults?: DialogDefaults
   /**
    * How long a closed dialog stays mounted so its exit animation can play,
    * in ms. The caller's promise settles immediately regardless. Default 200.
@@ -76,6 +89,7 @@ const defaultCloseGuardErrorHandler: DialogCloseGuardErrorHandler = (
 export function DialogProvider({
   children,
   frame: Frame,
+  defaults,
   exitDuration = DEFAULT_EXIT_DURATION,
   baseZIndex = DEFAULT_BASE_Z_INDEX,
   onCloseGuardError = defaultCloseGuardErrorHandler,
@@ -229,22 +243,45 @@ export function DialogProvider({
     [exitTimers, pending]
   )
 
+  // keyed by value: `defaults={{ … }}` inline must not re-render every frame
+  const {
+    width,
+    height,
+    closeOnEscape,
+    closeOnOutsideClick,
+    maximizable,
+    draggable,
+  } = defaults ?? {}
+  const resolvedDefaults = React.useMemo<DialogDefaults>(
+    () => ({
+      width,
+      height,
+      closeOnEscape,
+      closeOnOutsideClick,
+      maximizable,
+      draggable,
+    }),
+    [width, height, closeOnEscape, closeOnOutsideClick, maximizable, draggable]
+  )
+
   const topmost = topmostOpenIndex(stack)
 
   return (
     <DialogActionsContext.Provider value={actions}>
-      <DialogStackContext.Provider value={stack}>
-        {children}
-        {stack.map((instance, index) => (
-          <Frame
-            key={instance.id}
-            instance={instance}
-            index={index}
-            isTopmost={index === topmost}
-            zIndex={baseZIndex + index * Z_INDEX_STEP}
-          />
-        ))}
-      </DialogStackContext.Provider>
+      <DialogDefaultsContext.Provider value={resolvedDefaults}>
+        <DialogStackContext.Provider value={stack}>
+          {children}
+          {stack.map((instance, index) => (
+            <Frame
+              key={instance.id}
+              instance={instance}
+              index={index}
+              isTopmost={index === topmost}
+              zIndex={baseZIndex + index * Z_INDEX_STEP}
+            />
+          ))}
+        </DialogStackContext.Provider>
+      </DialogDefaultsContext.Provider>
     </DialogActionsContext.Provider>
   )
 }

@@ -55,8 +55,8 @@ export const renameDialog = defineDialog<{ name: string }, string>({
   icon: undefined,                               // optional ComponentType<{ className?: string }>
   width: "sm",                                   // sm md lg(default) xl 2xl 3xl 4xl 5xl full
   height: "auto",                                // auto(default) tall full
-  closeOnEscape: true,
-  closeOnOutsideClick: true,
+  closeOnEscape: true,                           // these six default to the provider's `defaults`,
+  closeOnOutsideClick: true,                     // then to the values shown
   maximizable: true,
   draggable: true,
   component: RenameSurface,
@@ -99,7 +99,7 @@ Runs on Escape, outside click, close button and requestClose(). resolve()/dismis
 
 ## Provider props
 
-`labels` ({ maximize, restore, close }), `exitDuration` (ms, default 200, use 0 in tests), `baseZIndex` (default 50), `onCloseGuardError(error, { id, kind })`, `frame` (custom frame component).
+`defaults` (app-wide width, height, closeOnEscape, closeOnOutsideClick, maximizable, draggable — a definition that sets the option wins), `labels` ({ maximize, restore, close }), `exitDuration` (ms, default 200, use 0 in tests), `baseZIndex` (default 50), `onCloseGuardError(error, { id, kind })`, `frame` (custom frame component).
 
 ## Behaviour
 
